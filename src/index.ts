@@ -2,6 +2,8 @@ import './styles/chessboard-1.0.0.css';
 import './styles/main.styl';
 
 import { Chess } from 'chess.js/chess.js';
+import { algGen } from './algGen.js';
+
 
 const appEl = document.getElementById('app');
 
@@ -10,7 +12,7 @@ function main(appEl) {
     boardEl.style.width = '640px';
     boardEl.id = 'board';
     appEl.appendChild(boardEl);
-    
+
     // @ts-ignore
     const board = Chessboard('board', { pieceTheme: '/images/chesspieces/wikipedia/{piece}.png' });
 
