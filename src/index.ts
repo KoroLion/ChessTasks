@@ -1,3 +1,5 @@
+import './styles/main.styl';
+
 import { Chess } from 'chess.js/chess.js';
 
 const appEl = document.getElementById('app');
@@ -6,12 +8,11 @@ function main(appEl) {
     appEl.innerHTML = 'WOLF';
 
     const chess = new Chess();
-    console.log(chess.ascii());
 
     const moves = chess.moves();
     chess.move(moves[Math.floor(Math.random() * moves.length)]);
 
-    console.log(chess.ascii());
-    console.log(chess.pgn());
+    const asciiChess = chess.ascii().replace(/\n/g, "<br>");
+    appEl.innerHTML = `${asciiChess}<hr>${chess.pgn()}<hr>${chess.fen()}`;
 }
 main(appEl);
