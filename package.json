@@ -1,6 +1,33 @@
 {
+  "name": "ChessTasks",
+  "author": "Nozemiso and KoroLion",
+  "version": "1.0.0",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"http-server build\" \"rollup -c -w\" --kill-others",
+    "lint": "eslint src/ --ext .js,.ts",
+    "dist": "rollup -c"
+  },
   "dependencies": {
     "@chrisoakman/chessboardjs": "^1.0.0",
-    "chess.js": "^0.11.0"
+    "chess.js": "^0.11.0",
+    "rollup-plugin-copy": "^3.4.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^8.2.1",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "concurrently": "^6.0.2",
+    "eslint": "^7.24.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "http-server": "^0.12.3",
+    "rollup": "^2.45.2",
+    "rollup-plugin-styles": "^3.14.1",
+    "tslib": "^2.2.0",
+    "typescript": "^4.2.4"
   }
 }
