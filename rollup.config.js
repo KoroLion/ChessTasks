@@ -23,9 +23,9 @@ export default {
         }),
         copy({
             targets: [
-                // { src: 'src/images/*', dest: 'build/images' },
+                { src: 'src/images/*', dest: 'build/images' },
                 { src: 'src/index.html', dest: 'build/' },
-                // { src: 'node_modules/handlebars/dist/handlebars.min.js', dest: 'build/' }
+                { src: 'node_modules/@chrisoakman/chessboardjs/dist/chessboard-1.0.0.min.js', dest: 'build/' }
             ]
         }),
         nodeResolve(),
