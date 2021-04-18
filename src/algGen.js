@@ -5,11 +5,27 @@ function randInt(a) {
 }
 
 function randomFigure(figCounter, figMax) {
-    const figList = { 0: 'k', 1: 'q', 2: 'r', 3: 'b', 4: 'n', 5: 'p'};
+    const figList = { 0: 'k', 1: 'q', 2: 'r', 3: 'b', 4: 'n', 5: 'p' };
     let curFig = figList[randInt(6)];
     while (figCounter[curFig] >= figMax[curFig]) curFig = figList[randInt(6)];
     figCounter[curFig]++;
     return curFig;
+}
+
+function movableFigure(figCounter, figMax, chess, pos) {
+    let tmpChess = chess.copy;
+    let tmpCounter = figCounter.copy;
+    console.log(tmpChess, tmpCounter);
+    let tmpFigure = randomFigure(tmpCounter, figMax);
+
+    tmpChess.put({ type: tmpFigure, color: 'w' }, pos);
+    while ( tmpChess.moves(pos).length === 0) {
+        tmpChess = chess.copy;
+        tmpCounter = figCounter.copy;
+        tmpFigure = randomFigure(tmpCounter, figMax, tmpChess);
+        tmpChess.put({ type: tmpFigure, color: 'w' }, pos);
+    }
+    return tmpFigure;
 }
 
 function randomPosition() {
@@ -26,15 +42,46 @@ function getSimpleTurn(turnStr) {
 
 function getRandomMove(chess, pos) {
     const moves = chess.moves({ square: pos });
-    //console.log(moves);
     if (moves.length === 0) return pos;
     else return getSimpleTurn(moves[randInt(moves.length)]);
 }
 
-function baseGen(chess) {
+function baseGen(chess, figCounter, figMax) {
     chess.clear();
     const kingPos = randomPosition();
-    const figCounter = {
+    chess.put({
+        type: 'k',
+        color: 'w'
+    }, kingPos);
+    const planToCheck = chess.moves({ square: kingPos });
+    chess.remove(kingPos);
+    chess.put({
+        type: 'k',
+        color: 'w'
+    }, kingPos);
+    for (let pos of planToCheck) {
+        console.log(figCounter);
+        if (chess.get(pos) === null) {
+            pos = pos.slice(1, 3);
+            const fig = randomFigure(figCounter, figMax);
+            chess.put({
+                type: fig,
+                color: 'w'
+            }, pos);
+            const fromPos = getRandomMove(chess, pos);
+            chess.remove(pos);
+            chess.put({
+                type: fig,
+                color: 'b'
+            }, fromPos);
+        }
+    }
+    return [kingPos, chess];
+}
+
+export function algGen() {
+    let chess = new Chess();
+    let figCounter = {
         k: 0,
         q: 0,
         r: 0,
@@ -50,41 +97,8 @@ function baseGen(chess) {
         n: 2,
         p: 8
     };
-
-    chess.put({
-        type: 'k',
-        color: 'w'
-    }, kingPos);
-    const planToCheck = chess.moves({ square: kingPos });
-    chess.remove(kingPos);
-    chess.put({
-        type: 'k',
-        color: 'b'
-    }, kingPos);
-    for (let pos of planToCheck) {
-        if (chess.get(pos) === null) {
-            pos = pos.slice(1, 3);
-            const fig = randomFigure(figCounter, figMax);
-            chess.put({
-                type: fig,
-                color: 'w'
-            }, pos);
-            const fromPos = getRandomMove(chess, pos);
-            chess.remove(pos);
-            chess.put({
-                type: fig,
-                color: 'w'
-            }, fromPos);
-            //console.log(pos, fromPos);
-        }
-    }
-    return [kingPos, chess];
-}
-
-export function algGen() {
-    let chess = new Chess();
-
-    let gen = baseGen(chess);
+    console.log(figCounter);
+    let gen = baseGen(chess, figCounter, figMax);
     let kingPos = gen[0];
     chess = gen[1];
     while (chess.moves({ square: kingPos }).length !== 1) {
@@ -92,6 +106,14 @@ export function algGen() {
         kingPos = gen[0];
         chess = gen[1];
     }
-    console.log(chess.moves({ pos: kingPos }));
+    let finisherPos = chess.moves( { pos: kingPos });
+    console.log(figCounter);
+    let finisherFig = movableFigure(figCounter, figMax, chess, kingPos);
+
+    if (chess.get(finisherPos) !== null) {
+        chess.put({ type: finisherFig, color: 'b' }, kingPos);
+    }
+
+
     return chess;
 }
