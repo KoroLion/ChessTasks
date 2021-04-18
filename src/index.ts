@@ -13,11 +13,13 @@ function main(appEl) {
     boardEl.id = 'board';
     appEl.appendChild(boardEl);
 
-    const chess = new Chess('k7/8/4R3/1R6/8/8/1K6/8 w - - 0 1');
+    //const chess = new Chess('k7/8/4R3/1R6/8/8/1K6/8 w - - 0 1');
+    const chess = algGen();
 
     function onDrop(from, to, piece) {
         const move = chess.move({
-            from, to,
+            from,
+            to,
             promotion: 'q'
         })
         if (move === null) {
@@ -35,7 +37,7 @@ function main(appEl) {
         onDrop: onDrop
     });
     board.position(chess.fen());
-    console.log(chess.game_over())
+    console.log(chess.game_over());
 
     const infoEl = document.createElement('div');
     infoEl.innerHTML = `<hr>${chess.pgn()}<hr>${chess.fen()}`;
