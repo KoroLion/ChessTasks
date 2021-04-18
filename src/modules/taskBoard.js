@@ -28,7 +28,7 @@ export default class TaskBoard {
 
         // @ts-ignore
         this.board = Chessboard(el.id, {
-            pieceTheme: '/images/chesspieces/wikipedia/{piece}.png',
+            pieceTheme: 'images/chesspieces/wikipedia/{piece}.png',
             draggable: true,
             onDrop: onDrop,
             onDragStart: onDragStart

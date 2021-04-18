@@ -12,8 +12,8 @@ const appEl = document.getElementById('app');
 function newTask(board, topInfo, bottomInfo) {
     const chess = getTaskFromHistory();
 
-    const sideName = (chess.turn() === 'w')? 'white': 'black';
-    topInfo.innerHTML = `<h3>Now is ${sideName}'s move`;
+    const sideName = (chess.turn() === 'w') ? 'White' : 'Black';
+    topInfo.innerHTML = `<h3>${sideName}'s turn`;
     bottomInfo.innerHTML = `<hr><strong>PGN: </strong>${chess.pgn()}<hr><strong>FEN: </strong>${chess.fen()}`;
     board.update(chess);
 }
