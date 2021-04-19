@@ -2,7 +2,7 @@ import './styles/chessboard-1.0.0.css';
 import './styles/main.styl';
 
 import { Chess } from './lib/chess.js';
-import { algGen } from './modules/algGen.js';
+import { algGen } from './taskGenerators/algGen.js';
 
 import getTaskFromHistory from './taskGenerators/fromHistory.js';
 import TaskBoard from './modules/taskBoard.js';
