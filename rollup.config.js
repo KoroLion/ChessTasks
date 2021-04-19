@@ -4,6 +4,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import styles from 'rollup-plugin-styles';
 import copy from 'rollup-plugin-copy'
 import webWorkerLoader from 'rollup-plugin-web-worker-loader';
+import serve from 'rollup-plugin-serve';
 
 export default {
     input: 'src/index.ts',
@@ -14,11 +15,13 @@ export default {
         assetFileNames: "assets/[name][extname]"
     },
     plugins: [
-        webWorkerLoader(),
+        webWorkerLoader({
+            inline: false,
+            skipPlugins: ['serve', 'styles', 'typescript', 'copy']
+        }),
         typescript({
             target: "ES6",
-            sourceMap: false,
-            moduleResolution: 'node',
+            sourceMap: false
         }),
         styles({
             mode: ['extract', 'styles.min.css'],
@@ -31,11 +34,9 @@ export default {
                 { src: 'node_modules/@chrisoakman/chessboardjs/dist/chessboard-1.0.0.min.js', dest: 'build/' }
             ]
         }),
-        nodeResolve(),
-        commonjs({
-            // non-CommonJS modules will be ignored, but you can also
-            // specifically include/exclude files
-            include: 'node_modules/**'  // Default: undefined
+        serve({
+            contentBase: 'build',
+            port: 8080
         })
     ]
 };

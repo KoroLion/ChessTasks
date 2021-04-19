@@ -11,9 +11,9 @@ onmessage = function (e) {
 
     const limit = 100;
     let i = 0;
-    while (!chess.game_over() && (i++ < limit)) {
-        const randomCoef = (chess.turn() === 'w') ? 0.05 : 0.4;
-        const depth = (chess.turn() === 'w') ? 2 : 1;
+    while (i++ < limit) {
+        const randomCoef = (chess.turn() === 'w') ? 0.05 : 0.5;
+        const depth = (chess.turn() === 'w') ? 2 : 2;
 
         const time = performance.now();
 
@@ -25,9 +25,23 @@ onmessage = function (e) {
 
         chess.ugly_move(move);
 
-        postMessage({ fen: chess.fen(), pgn: chess.pgn() });
+        if (!chess.game_over()) {
+            postMessage({ fen: chess.fen(), pgn: chess.pgn() });
+        } else {
+            if (!chess.in_checkmate()) {
+                alert('UNABLE TO GENERATE TASK!');
+                return;
+            }
+            chess.undo();
+            break;
+        }
     }
 
-    chess.undo();
+    if (i == limit) {
+        alert('LIMIT REACHED!');
+        return;
+    }
+
+    console.log('DONE!');
     postMessage({ fen: chess.fen(), pgn: chess.pgn() });
 };

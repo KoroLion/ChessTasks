@@ -5,7 +5,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"http-server build\" \"rollup -c -w\" --kill-others",
+    "dev": "rollup -c -w",
     "lint": "eslint src/ --ext .js,.ts",
     "dist": "rollup -c"
   },
@@ -28,6 +28,7 @@
     "eslint-plugin-promise": "^5.1.0",
     "http-server": "^0.12.3",
     "rollup": "^2.45.2",
+    "rollup-plugin-serve": "^1.1.0",
     "rollup-plugin-styles": "^3.14.1",
     "rollup-plugin-web-worker-loader": "^1.6.1",
     "stylus": "^0.54.8",

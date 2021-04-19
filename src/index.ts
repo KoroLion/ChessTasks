@@ -2,9 +2,9 @@ import './styles/chessboard-1.0.0.css';
 import './styles/main.styl';
 
 import { Chess } from './lib/chess.js';
-// import { algGen } from './algGen.js';
+import { algGen } from './modules/algGen.js';
 
-import getTaskFromHistory from './taskGenerators/aiGame.js';
+import getTaskFromHistory from './taskGenerators/fromHistory.js';
 import TaskBoard from './modules/taskBoard.js';
 
 import TaskWorker from 'web-worker:./taskGenerators/aiGameWorker';
@@ -13,7 +13,9 @@ const appEl = document.getElementById('app');
 
 const html = `
 <h1 id="titleEl">Chess Tasks</h1>
-<button class="btn" id="nextTaskButton">Next task</button>
+<button class="btn" id="generateTaskByAI">Generate AI Task</button>
+<button class="btn" id="generateTask">Generate Task 123</button>
+<button class="btn" id="getTaskFromPGN">Create task from PGN</button>
 <div id="topInfo"><h3><span id="sideName"></span>'s turn</h3></div>
 <div id="board"></div>
 <div id="bottomInfo"><hr><strong>PGN: </strong><span id="pgn"></span><hr><strong>FEN: </strong><span id="fen"></span></div>
@@ -51,12 +53,25 @@ function main(appEl) {
     const pgnEl = document.getElementById('pgn');
     const fenEl = document.getElementById('fen');
     const sideNameEl = document.getElementById('sideName');
-    const nextTaskButton = document.getElementById('nextTaskButton');
+
+    const generateTaskByAI = document.getElementById('generateTaskByAI');
+    const generateTask = document.getElementById('generateTask');
+    const createFromPGN = document.getElementById('getTaskFromPGN');
 
     const chess = new Chess();
     const board = new TaskBoard(boardEl, chess);
 
-    nextTaskButton.addEventListener('click', () => { newTask(board, sideNameEl, pgnEl, fenEl); });
-    newTask(board, sideNameEl, pgnEl, fenEl);
+    generateTaskByAI.addEventListener('click', () => {
+        newTask(board, sideNameEl, pgnEl, fenEl);
+    });
+    generateTask.addEventListener('click', () => {
+        const chess = algGen();
+        board.update(chess);
+    });
+    createFromPGN.addEventListener('click', () => {
+        const chess = getTaskFromHistory();
+        board.update(chess);
+    });
+    // newTask(board, sideNameEl, pgnEl, fenEl);
 }
 main(appEl);
