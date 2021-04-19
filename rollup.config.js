@@ -3,6 +3,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import styles from 'rollup-plugin-styles';
 import copy from 'rollup-plugin-copy'
+import webWorkerLoader from 'rollup-plugin-web-worker-loader';
 
 export default {
     input: 'src/index.ts',
@@ -13,9 +14,11 @@ export default {
         assetFileNames: "assets/[name][extname]"
     },
     plugins: [
+        webWorkerLoader(),
         typescript({
             target: "ES6",
-            sourceMap: false
+            sourceMap: false,
+            moduleResolution: 'node',
         }),
         styles({
             mode: ['extract', 'styles.min.css'],

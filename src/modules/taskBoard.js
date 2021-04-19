@@ -8,7 +8,7 @@ export default class TaskBoard {
                 from,
                 to,
                 promotion: 'q'
-            })
+            });
             if (move === null) {
                 return 'snapback';
             } else if (!self.chess.in_checkmate()) {
