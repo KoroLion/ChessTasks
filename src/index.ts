@@ -2,49 +2,25 @@ import './styles/chessboard-1.0.0.css';
 import './styles/main.styl';
 
 import { Chess } from './lib/chess.js';
-import { algGen } from './taskGenerators/algGen.js';
-
-import getTaskFromHistory from './taskGenerators/fromHistory.js';
 import TaskBoard from './modules/taskBoard.js';
 
+import { algGen } from './taskGenerators/algGen';
+import getTaskFromHistory from './taskGenerators/fromHistory.js';
 import TaskWorker from 'web-worker:./taskGenerators/aiGameWorker';
 
 const appEl = document.getElementById('app');
 
 const html = `
 <h1 id="titleEl">Chess Tasks</h1>
-<button class="btn" id="generateTaskByAI">Generate AI Task</button>
-<button class="btn" id="generateTask">Generate Task 123</button>
-<button class="btn" id="getTaskFromPGN">Create task from PGN</button>
-<div id="topInfo"><h3><span id="sideName"></span>'s turn</h3></div>
+<div class="buttons">
+    <button class="btn" id="generateTask">Generate Task</button>
+    <button class="btn" id="generateTaskByAI">Generate AI Task</button>
+    <button class="btn" id="getTaskFromPGN">Create task from PGN</button>
+</div>
 <div id="board"></div>
+<div id="topInfo"><h3><span id="sideName"></span>'s turn</h3></div>
 <div id="bottomInfo"><hr><strong>PGN: </strong><span id="pgn"></span><hr><strong>FEN: </strong><span id="fen"></span></div>
 `;
-
-function newTask(board, sideNameEl, pgnEl, fenEl) {
-    let chess = new Chess();
-    // chess.load_pgn('1. d4 d5 2. Nc3 Bd7 3. Nxd5 c6 4. Nb4 Qc7 5. c3 e6 6. Nc2 Ke7 7. Nb4 e5 8. dxe5 Bg4 9. Bg5+ Ke6 10. Qd4 Nd7 11. Nd3 a6 12. e4 Qxe5 13. Nxe5 Rc8 14. Nxg4 b5 15. f4 f5 16. O-O-O Ndf6 17. exf5+ Kxf5 18. Ne3+ Ke6 19. f5+ Kf7 20. Nf3 Rc7');
-
-    const taskWorker = new TaskWorker();
-    taskWorker.addEventListener('message', function (e) {
-        const { fen, pgn } = e.data;
-        // chess.load(fen);
-        chess.load_pgn(pgn);
-
-        const sideName = (chess.turn() === 'w') ? 'White' : 'Black';
-
-        sideNameEl.innerHTML = sideName;
-        pgnEl.innerHTML = chess.pgn();
-        fenEl.innerHTML = chess.fen();
-
-        board.update(chess);
-    });
-    taskWorker.postMessage(chess.fen());
-
-    /*const { fen, pgn } = getTaskFromHistory();
-    chess.load(fen);
-    chess.load_pgn(pgn);*/
-}
 
 function main(appEl) {
     appEl.innerHTML = html;
@@ -53,6 +29,12 @@ function main(appEl) {
     const pgnEl = document.getElementById('pgn');
     const fenEl = document.getElementById('fen');
     const sideNameEl = document.getElementById('sideName');
+    function setTaskInfo(chess) {
+        const sideName = (chess.turn() === 'w') ? 'White' : 'Black';
+        sideNameEl.innerHTML = sideName;
+        pgnEl.innerHTML = chess.pgn();
+        fenEl.innerHTML = chess.fen();
+    }
 
     const generateTaskByAI = document.getElementById('generateTaskByAI');
     const generateTask = document.getElementById('generateTask');
@@ -62,16 +44,29 @@ function main(appEl) {
     const board = new TaskBoard(boardEl, chess);
 
     generateTaskByAI.addEventListener('click', () => {
-        newTask(board, sideNameEl, pgnEl, fenEl);
+        let chess = new Chess();
+
+        const taskWorker = new TaskWorker();
+        taskWorker.addEventListener('message', function (e) {
+            const { fen, pgn } = e.data;
+            chess.load_pgn(pgn);
+            
+            board.update(chess);
+            setTaskInfo(chess);
+        });
+        taskWorker.postMessage(chess.fen());
     });
+
     generateTask.addEventListener('click', () => {
         const chess = algGen();
         board.update(chess);
+        setTaskInfo(chess);
     });
+
     createFromPGN.addEventListener('click', () => {
         const chess = getTaskFromHistory();
         board.update(chess);
+        setTaskInfo(chess);
     });
-    // newTask(board, sideNameEl, pgnEl, fenEl);
 }
 main(appEl);
