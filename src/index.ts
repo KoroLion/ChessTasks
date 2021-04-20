@@ -37,7 +37,7 @@ function main(appEl) {
     }
 
     const generateTaskByAI = document.getElementById('generateTaskByAI');
-    const generateTask = document.getElementById('generateTask');
+    // const generateTask = document.getElementById('generateTask');
     const createFromPGN = document.getElementById('getTaskFromPGN');
 
     const chess = new Chess();
@@ -57,11 +57,11 @@ function main(appEl) {
         taskWorker.postMessage(chess.fen());
     });
 
-    generateTask.addEventListener('click', () => {
+    /*generateTask.addEventListener('click', () => {
         const chess = algGen();
         board.update(chess);
         setTaskInfo(chess);
-    });
+    });*/
 
     createFromPGN.addEventListener('click', () => {
         const chess = getTaskFromHistory();
