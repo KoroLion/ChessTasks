@@ -12,8 +12,8 @@ onmessage = function (e) {
     const limit = 100;
     let i = 0;
     while (i++ < limit) {
-        const randomCoef = (chess.turn() === 'w') ? 0.05 : 0.5;
-        const depth = (chess.turn() === 'w') ? 2 : 2;
+        const randomCoef = (chess.turn() === 'w') ? 0.05 : 0.3;
+        const depth = (chess.turn() === 'w') ? 2 : 1;
 
         const time = performance.now();
 
