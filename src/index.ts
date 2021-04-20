@@ -13,8 +13,8 @@ const appEl = document.getElementById('app');
 const html = `
 <h1 id="titleEl">Chess Tasks</h1>
 <div class="buttons">
-    <button class="btn" id="generateTask">Generate Task</button>
-    <button class="btn" id="generateTaskByAI">Generate AI Task</button>
+    <!--<button class="btn" id="generateTask">Generate Task</button>-->
+    <button class="btn" id="generateTaskByAI">Generate Task</button>
     <button class="btn" id="getTaskFromPGN">Create task from PGN</button>
 </div>
 <div id="board"></div>
@@ -50,7 +50,7 @@ function main(appEl) {
         taskWorker.addEventListener('message', function (e) {
             const { fen, pgn } = e.data;
             chess.load_pgn(pgn);
-            
+
             board.update(chess);
             setTaskInfo(chess);
         });
